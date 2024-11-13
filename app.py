@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory, abort
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -24,6 +24,23 @@ app.logger.addHandler(handler)
 def home():
     app.logger.info('Home page accessed.')
 
+    # Path to the documents directory
+    documents_dir = os.path.join(app.static_folder, 'documents')
+
+    # Initialize a dictionary to hold categories and their documents
+    documents = {}
+
+    # Iterate through each category (subfolder) in documents_dir
+    for category in os.listdir(documents_dir):
+        category_path = os.path.join(documents_dir, category)
+        if os.path.isdir(category_path):
+            # List all PDF files in the category
+            pdf_files = [f for f in os.listdir(category_path) if f.lower().endswith('.pdf')]
+            if pdf_files:
+                # Clean category name (replace underscores with spaces)
+                clean_category = category.replace('_', ' ')
+                documents[clean_category] = pdf_files
+
     # Path to the videos directory
     videos_dir = os.path.join(app.static_folder, 'videos')
 
@@ -38,7 +55,7 @@ def home():
         selected_video = random.choice(video_files)
         app.logger.info(f'Selected background video: {selected_video}')
 
-    return render_template('index.html', background_video=selected_video)
+    return render_template('index.html', background_video=selected_video, documents=documents)
 
 @app.route('/api/contact', methods=['POST'])
 def contact():
@@ -52,7 +69,14 @@ def contact():
         return jsonify({'status': 'success'}), 200
     return jsonify({'status': 'failure'}), 400
 
-# Additional routes can be added here
+# Route to handle PDF downloads (optional if you prefer more control)
+@app.route('/download/<category>/<filename>')
+def download_file(category, filename):
+    documents_dir = os.path.join(app.static_folder, 'documents', category)
+    try:
+        return send_from_directory(directory=documents_dir, filename=filename, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

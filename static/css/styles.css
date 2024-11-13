@@ -19,40 +19,30 @@ body, html {
 .video-section {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 80vh; /* Adjusted height for cropping */
     overflow: hidden;
-    /* z-index: -1; Ensures the video stays behind other content */
+    z-index: -1; /* Keeps video behind content */
 }
 
 .video-section video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top; /* Adjusts video cropping */
     opacity: 0;
     animation: fadeInVideo 2s forwards;
 }
 
-.video-overlay {
+.video-section::after {
+    content: "";
     position: absolute;
-    top: 20px;
-    right: 20px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Gradient height */
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.7));
+    pointer-events: none;
     z-index: 2;
-}
-
-.video-overlay button {
-    background-color: rgba(0, 170, 255, 0.7); /* Semi-transparent blue */
-    border: none;
-    color: #ffffff;
-    padding: 15px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5em;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.video-overlay button:hover {
-    background-color: rgba(0, 170, 255, 1);
-    transform: scale(1.1);
 }
 
 /* Fallback Hero Section */
@@ -60,7 +50,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height */
+    height: 80vh; /* Adjusted to match video section */
     background-color: #001f3f; /* Dark Blue */
     color: #ffffff;
     text-align: center;
@@ -76,15 +66,10 @@ body, html {
     font-size: 1.5em;
 }
 
-/* Fade-In Video Animation */
-@keyframes fadeInVideo {
-    to {
-        opacity: 1;
-    }
-}
-
 /* Overlay Content */
 .content-section {
+    position: relative;
+    z-index: 1; /* Ensures content is above the video */
     padding: 60px 20px;
     background-color: #001f3f; /* Dark Blue */
     color: #ffffff;
@@ -137,54 +122,46 @@ body, html {
     transform: translateY(-5px);
 }
 
-/* Contact Form Styles */
-form {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-form .form-group {
-    margin-bottom: 20px;
-}
-
-form .form-control {
-    padding: 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-form .btn-primary {
-    padding: 15px 30px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
+/* Documents Section */
+#documents .card-header {
     background-color: #00aaff;
+}
+
+#documents .card-header button {
     color: #ffffff;
-    cursor: pointer;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+    font-size: 1.25em;
+}
+
+#documents .card-header button:hover {
+    text-decoration: none;
+}
+
+#documents .list-group-item {
+    background-color: #f8f9fa;
+    color: #000000;
+}
+
+#documents .list-group-item .btn-success {
+    background-color: #28a745;
+    border: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-form .btn-primary:hover {
-    background-color: #0088cc;
-    transform: translateY(-3px);
+#documents .list-group-item .btn-success:hover {
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
-.alert {
-    padding: 15px;
+/* PDF Container Styles (If Embedding) */
+.pdf-container {
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-top: 10px;
-}
-
-.alert-success {
-    background-color: rgba(0, 255, 0, 0.7);
-    color: #ffffff;
-}
-
-.alert-danger {
-    background-color: rgba(255, 0, 0, 0.7);
-    color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 /* Footer */
@@ -195,38 +172,8 @@ footer {
     text-align: center;
 }
 
-/* Play/Pause Controls */
-/* .video-controls { */
-    /* Removed as controls are within the video-overlay */
-/* } */
-
 /* Animations */
-@keyframes slideInDown {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideInUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInContent {
-    from {
-        opacity: 0;
-    }
+@keyframes fadeInVideo {
     to {
         opacity: 1;
     }
@@ -258,5 +205,10 @@ footer {
 
     .hero-content p {
         font-size: 1.2em;
+    }
+
+    /* Adjust Accordion for Mobile */
+    #documents .card-header button {
+        font-size: 1em;
     }
 }
