@@ -19,7 +19,7 @@ body, html {
 .video-section {
     position: relative;
     width: 100%;
-    height: 80vh; /* Adjusted height for cropping */
+    height: 100vh; /* Adjusted height for cropping */
     overflow: hidden;
     z-index: -1; /* Keeps video behind content */
 }
